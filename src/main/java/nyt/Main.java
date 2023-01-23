@@ -39,7 +39,7 @@ public class Main {
 	public static HttpClient client = HttpClient.newHttpClient();
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		insertIntoBooksTable();
+		insertIntoAuthorsTable();
 	}
 
 	public static void executingOfQurey(String sql) {
@@ -60,7 +60,7 @@ public class Main {
 
 	}
 
-	public static void insertIntoBooksTable() throws IOException, InterruptedException {
+	public static void insertIntoAuthorsTable() throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(
 				"https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json?api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl"))
 				.build();
@@ -83,12 +83,31 @@ public class Main {
 			String published_date = records.getResults().getPublished_date();
 			String updated = records.getResults().getUpdated();
 
-			String sqlQueryToInsert = " insert into Books (" + "publisher," + "name, " + "title," + "author,"
+			String sqlQueryToInsert = " insert into authors (" + "publisher," + "name, " + "title," + "author,"
 					+ "list_name ," + "published_date_description," + "published_date ," + "updated ) Values ('"
 					+ publisher + "','" + name + "','" + title + "','" + author + "','" + list_name + "','"
 					+ published_date_description + "','" + published_date + "','" + updated + "'" + ")";
 			executingOfQurey(sqlQueryToInsert);
-//			System.out.println(sqlQueryToInsert);
+
 		}
+	}
+
+	public static void insertIntoSectionsTable() throws IOException, InterruptedException {
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(
+				"https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl "))
+				.build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		String responseJsonString = response.body();
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(responseJsonString);
+		String prettyJsonString = gson.toJson(je);
+		SectionApiDataInfo records = gson.fromJson(prettyJsonString, SectionApiDataInfo.class);
+		for (int i = 0; i < prettyJsonString.length(); i++) {
+
+		}
+
 	}
 }
