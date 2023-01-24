@@ -7,7 +7,7 @@ public class Docs {
 	private String subsection_name;
 	private String pub_date;
 	private String document_type;
-
+	keyword[] keywords;
 	private String lead_paragraph;
 
 	public String getLead_paragraph() {

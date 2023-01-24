@@ -1,6 +1,6 @@
 package nyt;
 
-public class BookApiDataInfo {
+public class AuthorApiDataInfo {
 
 	private String status;
 	private String num_results;

@@ -39,7 +39,8 @@ public class Main {
 	public static HttpClient client = HttpClient.newHttpClient();
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		insertIntoAuthorsTable();
+//		insertIntoAuthorsTable();
+		insertIntoSectionsTable();
 	}
 
 	public static void executingOfQurey(String sql) {
@@ -72,7 +73,7 @@ public class Main {
 		JsonParser jp = new JsonParser();
 		JsonElement je = jp.parse(responseJsonString);
 		String prettyJsonString = gson.toJson(je);
-		BookApiDataInfo records = gson.fromJson(prettyJsonString, BookApiDataInfo.class);
+		AuthorApiDataInfo records = gson.fromJson(prettyJsonString, AuthorApiDataInfo.class);
 		for (int i = 0; i < prettyJsonString.length(); i++) {
 			String publisher = records.getResults().getBooks()[i].getPublisher();
 			String name = records.getResults().getBooks()[i].getBuy_links()[0].getName();
@@ -94,7 +95,7 @@ public class Main {
 
 	public static void insertIntoSectionsTable() throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(
-				"https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl "))
+				"https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl"))
 				.build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -105,8 +106,21 @@ public class Main {
 		JsonElement je = jp.parse(responseJsonString);
 		String prettyJsonString = gson.toJson(je);
 		SectionApiDataInfo records = gson.fromJson(prettyJsonString, SectionApiDataInfo.class);
-		for (int i = 0; i < prettyJsonString.length(); i++) {
+		for (int r = 0; r < records.getResponse().getDocs().length; r++) {
+			Integer hits = records.getResponse().getMeta().getHits();
+			String source = records.getResponse().getDocs()[r].getSource();
+			String section_name = records.getResponse().getDocs()[r].getSection_name();
+			String subsection_name = records.getResponse().getDocs()[r].getSubsection_name();
+			String pub_date = records.getResponse().getDocs()[r].getPub_date();
+			String document_type = records.getResponse().getDocs()[r].getDocument_type();
+			String lead_paragraph = records.getResponse().getDocs()[r].getLead_paragraph();
+			String status = records.getStatus();
 
+			String sqlQueryToInsert = " insert into Sections (" + "hits," + "source," + "section_name,"
+					+ "subsection_name," + "pub_date," + "document_type," + "lead_paragraph" + ","
+					+ "status ) Values ('" + hits + "','" + source + "','" + section_name + "','" + subsection_name
+					+ "','" + pub_date + "','" + document_type + "','" + lead_paragraph + "','" + status + "'" + ")";
+			executingOfQurey(sqlQueryToInsert);
 		}
 
 	}
