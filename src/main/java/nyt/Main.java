@@ -124,4 +124,37 @@ public class Main {
 		}
 
 	}
+
+	public static void insertIntoArticlesTable() throws IOException, InterruptedException {
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(
+				"https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl"))
+				.build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		String responseJsonString = response.body();
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(responseJsonString);
+		String prettyJsonString = gson.toJson(je);
+		SectionApiDataInfo records = gson.fromJson(prettyJsonString, SectionApiDataInfo.class);
+		for (int r = 0; r < records.getResponse().getDocs().length; r++) {
+			Integer hits = records.getResponse().getMeta().getHits();
+			String source = records.getResponse().getDocs()[r].getSource();
+			String section_name = records.getResponse().getDocs()[r].getSection_name();
+			String subsection_name = records.getResponse().getDocs()[r].getSubsection_name();
+			String pub_date = records.getResponse().getDocs()[r].getPub_date();
+			String document_type = records.getResponse().getDocs()[r].getDocument_type();
+			String lead_paragraph = records.getResponse().getDocs()[r].getLead_paragraph();
+			String status = records.getStatus();
+
+			String sqlQueryToInsert = " insert into Sections (" + "hits," + "source," + "section_name,"
+					+ "subsection_name," + "pub_date," + "document_type," + "lead_paragraph" + ","
+					+ "status ) Values ('" + hits + "','" + source + "','" + section_name + "','" + subsection_name
+					+ "','" + pub_date + "','" + document_type + "','" + lead_paragraph + "','" + status + "'" + ")";
+			executingOfQurey(sqlQueryToInsert);
+		}
+
+	}
+
 }

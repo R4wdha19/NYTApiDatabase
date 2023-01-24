@@ -14,5 +14,28 @@ author varchar(100),
 	updated varchar(100));
 
 	select * from authors;
-
+	select * from Sections;
 	create table Sections (
+	id integer PRIMARY KEY IDENTITY(1,1),
+	hits int,
+	source VARCHAR (100),
+	section_name VARCHAR (100),
+	subsection_name VARCHAR (100),
+	 pub_date VARCHAR (100),
+	document_type VARCHAR (100),
+	lead_paragraph  VARCHAR (100),
+	status VARCHAR (100)
+	);
+	Alter table Sections ALTER COLUMN  lead_paragraph VARCHAR (5000);
+
+		create table Articls (
+	id integer PRIMARY KEY IDENTITY(1,1),
+	hits int,
+	source VARCHAR (100),
+	section_name VARCHAR (100),
+	subsection_name VARCHAR (100),
+	 pub_date VARCHAR (100),
+	document_type VARCHAR (100),
+	lead_paragraph  VARCHAR (100),
+	status VARCHAR (100)
+	);
