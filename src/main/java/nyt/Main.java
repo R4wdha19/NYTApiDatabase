@@ -21,6 +21,7 @@ public class Main {
 	public static final String user = "sa";
 	public static final String pass = "root";
 	public static Connection con;
+	static Scanner sc = new Scanner(System.in);
 	static {
 		try {
 			con = DriverManager.getConnection(url, user, pass);
@@ -41,7 +42,6 @@ public class Main {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-		Scanner sc = new Scanner(System.in);
 		System.out.println("Please Choose An Option ! ");
 		System.out.println("1 : Insert Into Authors");
 		System.out.println("2 : Insert Into Sections ");
@@ -121,7 +121,6 @@ public class Main {
 
 	public static void insertIntoSectionsTable() throws IOException, InterruptedException {
 
-		System.out.println(" What Is The Name Of The Author ? ");
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(
 				"https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl"))
 				.build();
@@ -147,14 +146,16 @@ public class Main {
 			String sqlQueryToInsert = " insert into Sections (" + "hits," + "source," + "section_name,"
 					+ "subsection_name," + "pub_date," + "document_type," + "lead_paragraph" + ","
 					+ "status ) Values ('" + hits + "','" + source + "','" + section_name + "','" + subsection_name
-					+ "','" + pub_date + "','" + document_type + "','" + lead_paragraph + "','" + status + "'"
-					+ ") where ";
+					+ "','" + pub_date + "','" + document_type + "','" + lead_paragraph + "','" + status + "'" + ")";
 			executingOfQurey(sqlQueryToInsert);
 		}
 
 	}
 
 	public static void insertIntoArticlesTable() throws IOException, InterruptedException {
+
+		System.out.println(" What Is The Name Of The Author ? ");
+		int idOfAuthor = sc.nextInt();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(
 				"https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=6BTGeQylDDCLiqIs9Z1ffNLyuJKTNNWl"))
 				.build();
@@ -183,7 +184,7 @@ public class Main {
 					+ "subsection_name," + "pub_date," + "document_type," + "lead_paragraph" + "," + "status " + ","
 					+ "name," + "value," + "rank) Values ('" + hits + "','" + source + "','" + section_name + "','"
 					+ subsection_name + "','" + pub_date + "','" + document_type + "','" + lead_paragraph + "','"
-					+ status + "','" + name + "','" + value + "'," + rank + ")";
+					+ status + "','" + name + "','" + value + "'," + rank + ")where id =" + idOfAuthor;
 			executingOfQurey(sqlQueryToInsert);
 		}
 
