@@ -7,8 +7,17 @@ public class Docs {
 	private String subsection_name;
 	private String pub_date;
 	private String document_type;
-	keyword[] keywords;
 	private String lead_paragraph;
+
+	public keyword[] getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(keyword[] keywords) {
+		this.keywords = keywords;
+	}
+
+	keyword[] keywords;
 
 	public String getLead_paragraph() {
 		return lead_paragraph;

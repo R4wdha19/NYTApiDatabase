@@ -4,7 +4,16 @@ public class Books {
 	private String publisher;
 	private String title;
 	private String author;
+	private Integer rank;
 	Buylinks[] buy_links;
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
 
 	public String getPublisher() {
 		return publisher;
